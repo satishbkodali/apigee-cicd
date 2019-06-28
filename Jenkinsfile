@@ -7,7 +7,7 @@ node {
 //   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
    echo env.WORKSPACE
-   bat "SET F=`${env.WORKSPACE}\apigee-cicd`"
+   bat "SET F=`${env.WORKSPACE}/apigee-cicd`"
 
 	bat "IF EXIST %F% RMDIR /S /Q %F%"
   // bat "rmdir /s /q apigee-cicd  2>nul"
