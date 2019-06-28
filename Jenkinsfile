@@ -7,7 +7,7 @@ node {
 //   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
    echo env.WORKSPACE
-   bat "rmdir \s \q apigee-cicd"
+   bat "rmdir /s /q apigee-cicd"
    bat "git clone https://github.com/satish1240/apigee-cicd.git"
    bat "maven clean -f apigee-cicd"   
 
