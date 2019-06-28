@@ -28,9 +28,12 @@ node {
    // Run the maven build
 
    env.NODEJS_HOME = "${tool 'nodejs'}"
-   echo env.NODEJS_HOME   
-   env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+   echo env.NODEJS_HOME    
+   env.apigeelint="C:\Users\847763\AppData\Roaming\npm"
+   
+   env.PATH = "${env.NODEJS_HOME}/bin:${env.apigeelint}:${env.PATH}"
    echo env.PATH
+
    bat "npm -v"
    bat "apigeelint -s /usr/lib/node_modules/npm/apigee-ci-deploy-bdd-lint-master/cicd-api/apiproxy/ -f table.js"
   }
