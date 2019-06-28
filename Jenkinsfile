@@ -21,8 +21,8 @@ node {
    echo env.NODEJS_HOME   
    env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
    echo env.PATH
-   sh "npm -v"
-   sh "apigeelint -s /usr/lib/node_modules/npm/apigee-ci-deploy-bdd-lint-master/cicd-api/apiproxy/ -f table.js"
+   bat "npm -v"
+   bat "apigeelint -s /usr/lib/node_modules/npm/apigee-ci-deploy-bdd-lint-master/cicd-api/apiproxy/ -f table.js"
   }
 
   stage('Promotion') {
