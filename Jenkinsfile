@@ -18,7 +18,7 @@ node {
 //   sh "curl -u apikey: 'https://assertible.com/deployments' //  -d'{\"service\":\"d8d73-b0a94b325ae4\",\"environmentName\":\"production\",\"version\":\"v1\"}'"
 //  }
 
-  stage('clone repo and clean it'
+
   stage('Build started') {
   }
   stage('Policy-Code Analysis') {
