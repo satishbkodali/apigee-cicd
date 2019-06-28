@@ -16,8 +16,11 @@ node {
   stage('Policy-Code Analysis') {
    // Run the maven build
    env.WORKSPACE = pwd()
+   echo env.WORKSPACE
    env.NODEJS_HOME = "${tool 'nodejs'}"
+   echo env.NODEJS_HOME   
    env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+   echo env.PATH
    sh "npm -v"
    sh "apigeelint -s /usr/lib/node_modules/npm/apigee-ci-deploy-bdd-lint-master/cicd-api/apiproxy/ -f table.js"
   }
