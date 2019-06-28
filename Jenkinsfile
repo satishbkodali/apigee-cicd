@@ -45,7 +45,7 @@ node {
   }
   stage('Deploy to Production') {
    // Run the maven build
-   sh "'${mvnHome}/bin/mvn' -f /usr/lib/node_modules/npm/apigee-ci-deploy-bdd-lint-master/hr-api/pom.xml install -Pprod -Dusername=<email_here> -Dpassword=<password_here>"
+   bat "mvn -f apigee-cicd/cicd-api/pom.xml install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
   }
   try {
    stage('Integration Tests') {
