@@ -7,9 +7,9 @@ node {
 //   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
    echo env.WORKSPACE
-   env.api="${env.WORKSPACE}/apigee-cicd"
 
-	bat "IF EXIST ${env.api} RMDIR /S /Q ${env.api}"
+
+	bat "IF EXIST apigee-cicd RMDIR /S /Q apigee-cicd"
   // bat "rmdir /s /q apigee-cicd  2>nul"
    bat "git clone https://github.com/satish1240/apigee-cicd.git"
    bat "mvn clean -f apigee-cicd"   
