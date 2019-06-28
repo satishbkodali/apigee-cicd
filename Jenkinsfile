@@ -2,21 +2,28 @@ node {
  try {
   notifySlack()
 
-  stage('Preparation') {
+  stage('Clone repo and clean it') {
    mvnHome = tool 'maven2'
 //   host = "https://assertible.com/deployments"
+   env.WORKSPACE = pwd()
+   echo env.WORKSPACE
+   bat "rmdir \s \q apigee-cicd"
+   bat "git clone https://github.com/satish1240/apigee-cicd.git"
+   bat "maven clean -f apigee-cicd"   
+
+
   }
 
 //  stage('Unit testing') {
 //   sh "curl -u apikey: 'https://assertible.com/deployments' //  -d'{\"service\":\"d8d73-b0a94b325ae4\",\"environmentName\":\"production\",\"version\":\"v1\"}'"
 //  }
 
+  stage('clone repo and clean it'
   stage('Build started') {
   }
   stage('Policy-Code Analysis') {
    // Run the maven build
-   env.WORKSPACE = pwd()
-   echo env.WORKSPACE
+
    env.NODEJS_HOME = "${tool 'nodejs'}"
    echo env.NODEJS_HOME   
    env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
