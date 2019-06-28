@@ -15,6 +15,7 @@ node {
   }
   stage('Policy-Code Analysis') {
    // Run the maven build
+   env.WORKSPACE = pwd()
    env.NODEJS_HOME = "${tool 'nodejs'}"
    env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
    sh "npm -v"
@@ -46,7 +47,7 @@ node {
   } finally {
    // generate cucumber reports in both Test Pass/Fail scenario
    // to generate reports, cucumber plugin searches for an *.json file in Workspace by default
-   sh "cd /usr/lib/node_modules/npm && yes | cp -rf reports.json /var/lib/jenkins/workspace/apigee-devops"
+   sh "cd /usr/lib/node_modules/npm && yes | cp -rf reports.json ${env.WORKSPACE}"
 
   }
  } catch (e) {
@@ -62,7 +63,7 @@ node {
 def notifySlack(String buildStatus = 'STARTED') {
  // Build status of null means success.
  cucumber '**/*.json'
- buildStatus = buildStatus ?: 'SUCCESS'
+ buildStatus = buildStatus ? : 'SUCCESS'
 
  def color
 
