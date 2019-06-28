@@ -2,10 +2,10 @@ node {
  try {
   notifySlack()
 
-//  stage('Preparation') {
-//   mvnHome = tool 'm2'
+  stage('Preparation') {
+   mvnHome = tool 'maven2'
 //   host = "https://assertible.com/deployments"
-// }
+  }
 
 //  stage('Unit testing') {
 //   sh "curl -u apikey: 'https://assertible.com/deployments' //  -d'{\"service\":\"d8d73-b0a94b325ae4\",\"environmentName\":\"production\",\"version\":\"v1\"}'"
@@ -19,7 +19,7 @@ node {
    env.NODEJS_HOME = "${tool 'nodejs'}"
    env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
    sh "npm -v"
-   sh "apigeelint -s /usr/lib/node_modules/npm/apigee-ci-deploy-bdd-lint-master/hr-api/apiproxy/ -f table.js"
+   sh "apigeelint -s /usr/lib/node_modules/npm/apigee-ci-deploy-bdd-lint-master/cicd-api/apiproxy/ -f table.js"
   }
 
   stage('Promotion') {
