@@ -45,7 +45,7 @@ node {
   }
   stage('Deploy to Production') {
    // Run the maven build
-   bat "mvn -f apigee-cicd/cicd-api/pom.xml install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
+   bat "mvn -f apigee-cicd/cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
   }
   try {
    stage('Integration Tests') {
