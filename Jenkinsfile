@@ -62,7 +62,7 @@ node {
 def notifySlack(String buildStatus = 'STARTED') {
  // Build status of null means success.
  cucumber '**/*.json'
- buildStatus = buildStatus ? : 'SUCCESS'
+ buildStatus = buildStatus ?: 'SUCCESS'
 
  def color
 
