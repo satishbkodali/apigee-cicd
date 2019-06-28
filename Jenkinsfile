@@ -35,7 +35,7 @@ node {
    echo env.PATH
 
    bat "npm -v"
-   bat "${env.apigeelint} -s ${env.WORKSPACE}\\apigee-cicd\\cicd-api\\apiproxy -f table.js"
+   bat "${env.apigeelint} -s apigee-cicd\\cicd-api\\apiproxy -f table.js"
   }
 
   stage('Promotion') {
