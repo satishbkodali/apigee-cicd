@@ -29,7 +29,7 @@ node {
 
    env.NODEJS_HOME = "${tool 'nodejs'}"
    echo env.NODEJS_HOME    
-   env.apigeelint="C:\Users\847763\AppData\Roaming\npm"
+   env.apigeelint="C:\\Users\\847763\\AppData\\Roaming\\npm"
    
    env.PATH = "${env.NODEJS_HOME}/bin:${env.apigeelint}:${env.PATH}"
    echo env.PATH
