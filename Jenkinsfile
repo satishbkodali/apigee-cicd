@@ -12,7 +12,7 @@ node {
 	bat "IF EXIST %F% RMDIR /S /Q %F%"
   // bat "rmdir /s /q apigee-cicd  2>nul"
    bat "git clone https://github.com/satish1240/apigee-cicd.git"
-   bat "maven clean -f apigee-cicd"   
+   bat "mvn clean -f apigee-cicd"   
 
 
   }
