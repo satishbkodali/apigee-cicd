@@ -1,8 +1,7 @@
 node {
  try {
-  notifySlack()
-
-  stage('Clone repo and clean it') {
+ 
+   stage('Clone repo and clean it') {
    mvnHome = tool 'maven2'
 //   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
@@ -22,6 +21,9 @@ node {
 
 	
   }
+  notifySlack()
+
+
 
 //  stage('Unit testing') {
 //   sh "curl -u apikey: 'https://assertible.com/deployments' //  -d'{\"service\":\"d8d73-b0a94b325ae4\",\"environmentName\":\"production\",\"version\":\"v1\"}'"
