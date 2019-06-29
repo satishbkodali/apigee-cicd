@@ -1,0 +1,9 @@
+{
+	"name": "apigee-ci-cd-test",
+	"version": "1.0.0",
+	"description": "Integration testing for Babu ci-cd API v1",
+	"dependencies": {
+		"apickli": "latest",
+		"cucumber": "^0.10.2"
+	}
+}
