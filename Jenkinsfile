@@ -1,21 +1,30 @@
 node {
  try {
-  notifySlack()
+ 
 
-  stage('Clone repo and clean it') {
+  notifySlack()
+  
+   stage('Clone repo and clean it') {
    mvnHome = tool 'maven2'
 //   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
    echo env.WORKSPACE
+   
 
 
 	bat "IF EXIST apigee-cicd RMDIR /S /Q apigee-cicd"
   // bat "rmdir /s /q apigee-cicd  2>nul"
    bat "git clone https://github.com/satish1240/apigee-cicd.git"
    bat "mvn clean -f apigee-cicd/cicd-api"   
+	bat """
+		cd apigee-cicd\\cicd-api\\test
+		npm install
+		cd ${env.WORKSPACE}
+		"""
 
-
+	
   }
+
 
 //  stage('Unit testing') {
 //   sh "curl -u apikey: 'https://assertible.com/deployments' //  -d'{\"service\":\"d8d73-b0a94b325ae4\",\"environmentName\":\"production\",\"version\":\"v1\"}'"
@@ -52,9 +61,10 @@ node {
     // Run the maven build
     env.NODEJS_HOME = "${tool 'nodejs'}"
     env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
-    sh "cd /usr/lib/node_modules/npm && cucumber-js --format json:reports.json features/prod_tests.feature"
+    bat "${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules/cucumber/bin/cucumber.js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features"
    }
   } catch (e) {
    //if tests fail, I have used an shell script which has 3 APIs to undeploy, delete current revision & deploy previous revision
@@ -63,7 +73,7 @@ node {
   } finally {
    // generate cucumber reports in both Test Pass/Fail scenario
    // to generate reports, cucumber plugin searches for an *.json file in Workspace by default
-   sh "cd /usr/lib/node_modules/npm && yes | cp -rf reports.json ${env.WORKSPACE}"
+   bat "copy -rf reports.json ${env.WORKSPACE}"
 
   }
  } catch (e) {
