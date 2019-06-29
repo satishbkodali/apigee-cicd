@@ -15,8 +15,8 @@ node {
    bat "git clone https://github.com/satish1240/apigee-cicd.git"
    bat "mvn clean -f apigee-cicd/cicd-api"   
 
-	bat "cd apigee-cicd/cicd-api/test"
-	bat "npm install"
+
+	bat "npm install apigee-cicd\\cicd-api\\test"
 	bat "cd ${env.WORKSPACE}"
   }
 
