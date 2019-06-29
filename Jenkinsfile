@@ -9,7 +9,7 @@ node {
 //   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
    echo env.WORKSPACE
-   
+   env.pf = "%ProgramFiles(x86)%\Jenkins\workspace\APG-Test"
 
 
 	bat "IF EXIST apigee-cicd RMDIR /S /Q apigee-cicd"
@@ -64,7 +64,7 @@ node {
 
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
-    bat "${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules/cucumber/bin/cucumber.js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features"
+    bat "${env.pf}/apigee-cicd/cicd-api/test/node_modules/cucumber/bin/cucumber.js --format json:reports.json  ${env.pf}/apigee-cicd/cicd-api/test/features"
    }
   } catch (e) {
    //if tests fail, I have used an shell script which has 3 APIs to undeploy, delete current revision & deploy previous revision
