@@ -7,6 +7,7 @@ node {
 //   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
    echo env.WORKSPACE
+   
 
 
 	bat "IF EXIST apigee-cicd RMDIR /S /Q apigee-cicd"
@@ -14,7 +15,9 @@ node {
    bat "git clone https://github.com/satish1240/apigee-cicd.git"
    bat "mvn clean -f apigee-cicd/cicd-api"   
 
-
+	bat "cd apigee-cicd/cicd-api/test"
+	bat "npm install"
+	bat "cd ${env.WORKSPACE}"
   }
 
 //  stage('Unit testing') {
@@ -52,12 +55,10 @@ node {
     // Run the maven build
     env.NODEJS_HOME = "${tool 'nodejs'}"
     env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
-	bat "dir apigee-cicd/cicd-api/test"
-	bat "npm install"
-	bat "dir ${env.WORKSPACE}"
+
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
-    sh "cd /usr/lib/node_modules/npm && cucumber-js --format json:reports.json features/prod_tests.feature"
+    bat "cucumber --format json:reports.json apigee-cicd/cicd-api/test/features/prod_tests.feature"
    }
   } catch (e) {
    //if tests fail, I have used an shell script which has 3 APIs to undeploy, delete current revision & deploy previous revision
