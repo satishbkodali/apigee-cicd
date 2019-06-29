@@ -66,7 +66,7 @@ node {
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
 	bat """
 		cd apigee-cicd/cicd-api/test/node_modules/cucumber/bin
-		cucumber.js --format json:reports.json  ./../../../features
+		cucumber.js --format json:reports.json  ./../../../features/prod_tests.feature
 		cd ${env.WORKSPACE}
 		"""	 
 	 
