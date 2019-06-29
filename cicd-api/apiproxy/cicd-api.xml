@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<APIProxy revision="1" name="hr-api">
-    <Basepaths>/hr</Basepaths>
+<APIProxy revision="1" name="cicd-api">
+    <Basepaths>/v1/dummyrest</Basepaths>
     <ConfigurationVersion majorVersion="4" minorVersion="0"/>
     <CreatedAt>1561659656228</CreatedAt>
     <CreatedBy>babuk0930@gmail.com</CreatedBy>
     <Description></Description>
-    <DisplayName>hr-api</DisplayName>
+    <DisplayName>cicd-api</DisplayName>
     <LastModifiedAt>1561660530701</LastModifiedAt>
     <LastModifiedBy>babuk0930@gmail.com</LastModifiedBy>
     <ManifestVersion>SHA-512:80f39132d0c92f7690547798a0bff6fb0c6613af3246c1e4a43e63bfee8d0fc95f242c43f693e7187c26db22e9230f533e88b4c5258f72ead7620e06fe7135d7</ManifestVersion>
