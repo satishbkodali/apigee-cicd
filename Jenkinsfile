@@ -64,8 +64,7 @@ node {
 
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
-    bat "
-	${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules/cucumber/bin/cucumber.js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features"
+    bat "${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules/cucumber/bin/cucumber.js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features"
    }
   } catch (e) {
    //if tests fail, I have used an shell script which has 3 APIs to undeploy, delete current revision & deploy previous revision
