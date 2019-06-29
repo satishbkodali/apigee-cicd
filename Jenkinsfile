@@ -52,6 +52,9 @@ node {
     // Run the maven build
     env.NODEJS_HOME = "${tool 'nodejs'}"
     env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+	bat "dir apigee-cicd/cicd-api/test"
+	bat "npm install"
+	bat "dir ${env.WORKSPACE}"
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
     sh "cd /usr/lib/node_modules/npm && cucumber-js --format json:reports.json features/prod_tests.feature"
