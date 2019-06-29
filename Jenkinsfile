@@ -9,7 +9,7 @@ node {
 //   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
    echo env.WORKSPACE
-   env.pf = "%ProgramFiles(x86)%\Jenkins\workspace\APG-Test"
+   env.pf = "%ProgramFiles(x86)%/Jenkins/workspace/APG-Test"
 
 
 	bat "IF EXIST apigee-cicd RMDIR /S /Q apigee-cicd"
