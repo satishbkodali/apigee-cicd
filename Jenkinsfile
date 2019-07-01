@@ -79,7 +79,10 @@ node {
   } finally {
    // generate cucumber reports in both Test Pass/Fail scenario
    // to generate reports, cucumber plugin searches for an *.json file in Workspace by default
-   bat "copy -rf reports.json ${env.WORKSPACE}"
+            bat "cd apigee-cicd/cicd-api/test/features && cp reports.json ${env.WORKSPACE}"
+            cucumber fileIncludePattern: 'reports.json'
+   
+ 
 
   }
  } catch (e) {
