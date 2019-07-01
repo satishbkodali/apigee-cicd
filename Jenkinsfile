@@ -9,7 +9,7 @@ node {
 //   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
    echo env.WORKSPACE
-   env.pf = "%ProgramFiles(x86)%/Jenkins/workspace/APG-Test"
+   env.pf = "C:/Jenkins/workspace/APG-Test"
 
 
 	bat "IF EXIST apigee-cicd RMDIR /S /Q apigee-cicd"
@@ -40,8 +40,8 @@ node {
    echo env.NODEJS_HOME    
    env.apigeelint="C:\\Users\\847763\\AppData\\Roaming\\npm\\apigeelint"
    
-   env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
-   echo env.PATH
+//   env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+//   echo env.PATH
 
    bat "npm -v"
    bat "apigeelint -s apigee-cicd\\cicd-api\\apiproxy -f table.js"
@@ -60,13 +60,13 @@ node {
    stage('Integration Tests') {
     // Run the maven build
     env.NODEJS_HOME = "${tool 'nodejs'}"
-    env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+//    env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
 
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
 	bat """
-		cd ${env.NODEJS_HOME}
-		cucumber-js --format json:reports.json  ../../../workspace/APG-Test/apigee-cicd/cicd-api/test/features/prod_tests.feature
+		cd ${env.NODEJS_HOME}/node_modules/npm/node_modules/cucumber/bin
+		cucumber-js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features/prod_tests.feature
 		copy reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
 		del /f reports.json
 		"""	 
