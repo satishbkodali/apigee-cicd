@@ -16,11 +16,11 @@ node {
   // bat "rmdir /s /q apigee-cicd  2>nul"
    bat "git clone https://github.com/satish1240/apigee-cicd.git"
    bat "mvn clean -f apigee-cicd/cicd-api"   
-	bat """
-		cd apigee-cicd\\cicd-api\\test
-		npm install
-		cd ${env.WORKSPACE}
-		"""
+//	bat """
+//		cd apigee-cicd\\cicd-api\\test
+//		npm install
+//		cd ${env.WORKSPACE}
+//		"""
 
 	
   }
@@ -64,7 +64,7 @@ node {
 
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
-	bat "cd ${env.NODEJS_HOME}/node_modules && cucumber-js --format json:reports.json  ${env.pf}/apigee-cicd/cicd-api/test/features/prod_tests.feature"	 
+	bat "cd ${env.NODEJS_HOME}/node_modules && cucumber-js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features/prod_tests.feature"	 
 	 
 
    }
@@ -75,7 +75,7 @@ node {
   } finally {
    // generate cucumber reports in both Test Pass/Fail scenario
    // to generate reports, cucumber plugin searches for an *.json file in Workspace by default
-            bat "cd apigee-cicd/cicd-api/test/features && cp reports.json ${env.WORKSPACE}"
+            bat "cd apigee-cicd/cicd-api/test/features && copy -rf reports.json ${env.WORKSPACE}"
             cucumber fileIncludePattern: 'reports.json'
    
  
