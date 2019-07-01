@@ -44,7 +44,7 @@ node {
    echo env.PATH
 
    bat "npm -v"
-   bat "${env.apigeelint} -s apigee-cicd\\cicd-api\\apiproxy -f table.js"
+   bat "apigeelint -s apigee-cicd\\cicd-api\\apiproxy -f table.js"
   }
 
   stage('Promotion') {
@@ -66,7 +66,7 @@ node {
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
 	bat "cd ${env.NODEJS_HOME}/node_modules && cucumber-js --format json:reports.json  ${env.pf}/apigee-cicd/cicd-api/test/features/prod_tests.feature"	 
 	 
- //   bat "${env.pf}/apigee-cicd/cicd-api/test/node_modules/cucumber/bin/cucumber.js --format json:reports.json  ${env.pf}/apigee-cicd/cicd-api/test/features"
+
    }
   } catch (e) {
    //if tests fail, I have used an shell script which has 3 APIs to undeploy, delete current revision & deploy previous revision
