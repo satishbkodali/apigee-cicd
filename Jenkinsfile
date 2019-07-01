@@ -86,6 +86,7 @@ node {
   throw e
  } finally {
   notifySlack(currentBuild.result)
+     bat "mvn clean -f apigee-cicd/cicd-api" 
  }
 }
 
