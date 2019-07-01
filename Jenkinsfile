@@ -66,7 +66,7 @@ node {
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
 	bat """
 		cd apigee-cicd/cicd-api/test/node_modules/cucumber/bin
-		cucumber.js --format json:reports.json  ./../../../features/prod_tests.feature
+		cucumber.js --format json:reports.json  ${env.pf}/apigee-cicd/cicd-api/test/features
 		cd ${env.WORKSPACE}
 		"""	 
 	 
@@ -96,7 +96,7 @@ def notifySlack(String buildStatus = 'STARTED') {
  // Build status of null means success.
     env.WORKSPACE = pwd()
 
- cucumber '**/reports.json'
+ cucumber '**/*.json'
  buildStatus = buildStatus ?: 'SUCCESS'
 
  def color
