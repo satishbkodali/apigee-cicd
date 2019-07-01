@@ -16,11 +16,11 @@ node {
   // bat "rmdir /s /q apigee-cicd  2>nul"
    bat "git clone https://github.com/satish1240/apigee-cicd.git"
    bat "mvn clean -f apigee-cicd/cicd-api"   
-//	bat """
-//		cd apigee-cicd\\cicd-api\\test
-//		npm install
-//		cd ${env.WORKSPACE}
-//		"""
+	bat """
+		cd apigee-cicd\\cicd-api\\test
+		npm install
+		cd ${env.WORKSPACE}
+		"""
 
 	
   }
@@ -65,8 +65,8 @@ node {
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
 	bat """
-		cd ${env.NODEJS_HOME}/node_modules/npm/node_modules/.bin
-		cucumber-js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features/prod_tests.feature
+	
+		${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules/cucumber/bin/cucumber-js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features/prod_tests.feature
 		copy reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
 		del /f reports.json
 		"""	 
