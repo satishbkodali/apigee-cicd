@@ -64,7 +64,7 @@ node {
 
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
-	bat "cd ${env.NODEJS_HOME}/node_modules && .bin/cucumber-js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features/prod_tests.feature"	 
+	bat "cd ${env.NODEJS_HOME}/node_modules/.bin && cucumber-js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features/prod_tests.feature"	 
 	 
 
    }
