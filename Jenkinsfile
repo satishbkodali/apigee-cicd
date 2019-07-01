@@ -9,7 +9,7 @@ node {
 //   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
    echo env.WORKSPACE
-   env.pf = "%ProgramFiles(x86)%/Jenkins/workspace/APIG-Test"
+   env.pf = "%ProgramFiles(x86)%/Jenkins/workspace/APG-Test"
 
 
 	bat "IF EXIST apigee-cicd RMDIR /S /Q apigee-cicd"
@@ -66,7 +66,7 @@ node {
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
 	bat """
 		cd ${env.NODEJS_HOME}/node_modules/.bin
-		cucumber-js --format json:reports.json  ../../../../../workspace/APIG-Test/apigee-cicd/cicd-api/test/features/prod_tests.feature
+		cucumber-js --format json:reports.json  ../../../../../workspace/APG-Test/apigee-cicd/cicd-api/test/features/prod_tests.feature
 		copy reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
 		del /f reports.json
 		"""	 
