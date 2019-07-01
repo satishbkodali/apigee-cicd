@@ -1,1 +1,1 @@
-module.exports = require('../../node_modules/apickli/apickli-gherkin.js');
+module.exports = require('apickli/apickli-gherkin.js');
