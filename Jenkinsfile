@@ -67,7 +67,7 @@ node {
 		"""
 	bat """
 		cd ${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules/.bin
-		cucumber-js --format json:${env.WORKSPACE}/apigee-cicd/cicd-api/test/features/reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
+		cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
 		"""	 
 	 
 
@@ -79,7 +79,8 @@ node {
   } finally {
    // generate cucumber reports in both Test Pass/Fail scenario
    // to generate reports, cucumber plugin searches for an *.json file in Workspace by default
-            bat "cd apigee-cicd/cicd-api/test/features && copy  reports.json ${env.WORKSPACE}"
+//            bat "cd apigee-cicd/cicd-api/test/features && copy  reports.json ${env.WORKSPACE}/apigee-cicd"
+
             cucumber fileIncludePattern: 'reports.json'
 //			bat "RMDIR /S /Q ${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules"
    
@@ -101,7 +102,7 @@ def notifySlack(String buildStatus = 'STARTED') {
  // Build status of null means success.
     env.WORKSPACE = pwd()
 
- cucumber '**/reports.json'
+ 
  buildStatus = buildStatus ?: 'SUCCESS'
 
  def color
