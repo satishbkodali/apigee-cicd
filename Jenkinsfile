@@ -9,7 +9,7 @@ node {
 
    stage('Clone repo and clean it') {
    mvnHome = tool 'maven2'
-   env.WORKSPACE = pwd()
+   env.WORKSPACE = pwd
    echo env.WORKSPACE
    sh """
       if [ -d apigee-cicd ]; then rm -Rf apigee-cicd; fi
