@@ -82,7 +82,7 @@ node {
    // to generate reports, cucumber plugin searches for an *.json file in Workspace by default
             bat "cd apigee-cicd/cicd-api/test/features && copy -rf reports.json ${env.WORKSPACE}"
             cucumber fileIncludePattern: 'reports.json'
-			bat "RMDIR /S /Q ${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules"
+//			bat "RMDIR /S /Q ${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules"
    
  
 
