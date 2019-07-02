@@ -67,8 +67,7 @@ node {
 		"""
 	bat """
 		cd ${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules/.bin
-		cucumber-js --format json:reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
-		del /f reports.json
+		cucumber-js --format json:${env.WORKSPACE}/apigee-cicd/cicd-api/test/features/reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
 		"""	 
 	 
 
