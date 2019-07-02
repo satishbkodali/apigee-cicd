@@ -3,15 +3,15 @@ Feature:
         
     @POST_call    
     Scenario: Create a record
-        Given I set body to {"employee_name":"jane","employee_salary":"10","employee_age":"20"}
+        Given I set body to {"name":"jane","salary":"10","age":"20"}
         When I POST to /v1/dummyrest/create
         Then response code should be 200
         And response body path $.entities[0].employee_name should be jane
     @Error    
     Scenario: error check
-        Given I set body to {"employee_name":"jane","employee_salary":"10","employee_age":"20"}
+        Given I set body to {"name":"jane","salary":"10","age":"20"}
         When I POST to /v1/dummyrest/create
-        Then response code should be 400
+        Then response code should be 200
         And response body path $.error should be duplicate_unique_property_exists    
     @GET_call    
     Scenario: retrieve a record
