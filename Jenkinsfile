@@ -6,19 +6,12 @@ node {
   
    stage('Clone repo and clean it') {
    mvnHome = tool 'maven2'
-//   host = "https://assertible.com/deployments"
    env.WORKSPACE = pwd()
    echo env.WORKSPACE
-   env.pf = "C:/Jenkins/workspace/APG-Test"
-
-
-	bat "IF EXIST apigee-cicd RMDIR /S /Q apigee-cicd"
-  // bat "rmdir /s /q apigee-cicd  2>nul"
+   //Clone git repo
+   bat "IF EXIST apigee-cicd RMDIR /S /Q apigee-cicd"
    bat "git clone https://github.com/satish1240/apigee-cicd.git"
    bat "mvn clean -f apigee-cicd/cicd-api"   
-
-
-	
   }
 
 
@@ -30,46 +23,34 @@ node {
   stage('Build started') {
   }
   stage('Policy-Code Analysis') {
-   // Run the maven build
-
    env.NODEJS_HOME = "${tool 'nodejs'}"
-   echo env.NODEJS_HOME    
+   echo env.NODEJS_HOME   
+   //run apigeelint to anlaysis code scan   
    env.apigeelint="C:\\Users\\847763\\AppData\\Roaming\\npm\\apigeelint"
-   
-//   env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
-//   echo env.PATH
+
 
    bat "npm -v"
    bat "apigeelint -s apigee-cicd\\cicd-api\\apiproxy -f table.js"
   }
-
+  // Approve or not to promote the API
   stage('Promotion') {
    timeout(time: 2, unit: 'DAYS') {
     input 'Do you want to Approve?'
    }
   }
   stage('Deploy to Production') {
-   // Run the maven build
+   // Run the maven build to deploy to prod
    bat "mvn -f apigee-cicd/cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
   }
-  stage('Enable trace') {
-   timeout(time: 2, unit: 'DAYS') {
-    input 'Do you enable trace?'
-   }
-  }  
+  
   try {
    stage('Integration Tests') {
-    // Run the maven build
-    env.NODEJS_HOME = "${tool 'nodejs'}"
-//    env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
-
-     // Copy the features to npm directory in case of cucumber not found error
-     //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
-	 
+	 // npm install the apickli and cucumber
 	bat """
 		cd apigee-cicd/cicd-api/test
 		npm install
 		"""
+     // run the cucumber for unit tests and run the tests		
 	bat """
 		cd ${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules/.bin
 		cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
@@ -84,13 +65,9 @@ node {
   } finally {
    // generate cucumber reports in both Test Pass/Fail scenario
    // to generate reports, cucumber plugin searches for an *.json file in Workspace by default
-//            bat "cd apigee-cicd/cicd-api/test/features && copy  reports.json ${env.WORKSPACE}/apigee-cicd"
-
+//            bat "cd apigee-cicd/cicd-api/test/features && copy  reports.json         ${env.WORKSPACE}/apigee-cicd"
+             // run cucumber reports from workspace home
             cucumber fileIncludePattern: 'reports.json'
-//			bat "RMDIR /S /Q ${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules"
-   
- 
-
   }
  } catch (e) {
   currentBuild.result = 'FAILURE'
@@ -104,8 +81,6 @@ node {
 
 
 def notifySlack(String buildStatus = 'STARTED') {
- // Build status of null means success.
-    env.WORKSPACE = pwd()
 
  
  buildStatus = buildStatus ?: 'SUCCESS'
