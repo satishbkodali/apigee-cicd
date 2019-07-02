@@ -52,6 +52,11 @@ node {
    // Run the maven build
    bat "mvn -f apigee-cicd/cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
   }
+  stage('Enable trace') {
+   timeout(time: 2, unit: 'DAYS') {
+    input 'Do you enable trace?'
+   }
+  }  
   try {
    stage('Integration Tests') {
     // Run the maven build
