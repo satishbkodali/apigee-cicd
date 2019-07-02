@@ -16,10 +16,10 @@ Feature:
     @GET_call    
     Scenario: retrieve a record
         Given I set Content-type header to application/json
-        When I GET /v1/dummyrest/employee/74873
+        When I GET /v1/dummyrest/employee/95860
         Then response code should be 200
-        And response body path $.entities[0].employee_name should be Muhammad
-        And response body path $.entities[0].employee_salary should be 10000
+        And response body path $.entities[0].employee_name should be Rasheed
+        And response body path $.entities[0].employee_salary should be 123
     @Error
     Scenario: not found record
         Given I set Content-type header to application/json
