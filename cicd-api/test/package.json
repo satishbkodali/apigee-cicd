@@ -4,6 +4,6 @@
 	"description": "Integration testing for Babu ci-cd API v1",
 	"dependencies": {
 		"apickli": "latest",
-		"cucumber": "^0.10.2"
+		"cucumber": "latest"
 	}
 }
