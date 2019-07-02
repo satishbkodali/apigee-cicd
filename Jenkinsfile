@@ -1,50 +1,30 @@
 node {
  try {
- 
-
   notifySlack()
-  
-   stage('Clone repo and clean it') {
-   mvnHome = tool 'maven2'
+
+//  stage('Preparation') {
+//   mvnHome = tool 'm2'
 //   host = "https://assertible.com/deployments"
-   env.WORKSPACE = pwd()
-   echo env.WORKSPACE
-   env.pf = "C:/Jenkins/workspace/APG-Test"
-
-
-	bat "IF EXIST apigee-cicd RMDIR /S /Q apigee-cicd"
-  // bat "rmdir /s /q apigee-cicd  2>nul"
-   bat "git clone https://github.com/satish1240/apigee-cicd.git"
-   bat "mvn clean -f apigee-cicd/cicd-api"   
-	bat """
-		cd apigee-cicd\\cicd-api\\test
-		npm install
-		cd ${env.WORKSPACE}
-		"""
-
-	
-  }
-
-
-//  stage('Unit testing') {
-//   sh "curl -u apikey: 'https://assertible.com/deployments' //  -d'{\"service\":\"d8d73-b0a94b325ae4\",\"environmentName\":\"production\",\"version\":\"v1\"}'"
 //  }
 
-
-  stage('Build started') {
+   stage('Clone repo and clean it') {
+   mvnHome = tool 'maven2'
+   env.WORKSPACE = pwd()
+   echo env.WORKSPACE
+   sh """
+      if [ -d apigee-cicd ]; then rm -Rf apigee-cicd; fi
+	  git clone https://github.com/satish1240/apigee-cicd.git
+	  mvn clean -f apigee-cicd/cicd-api
+	  """	
   }
+
+
   stage('Policy-Code Analysis') {
    // Run the maven build
-
    env.NODEJS_HOME = "${tool 'nodejs'}"
-   echo env.NODEJS_HOME    
-   env.apigeelint="C:\\Users\\847763\\AppData\\Roaming\\npm\\apigeelint"
-   
-//   env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
-//   echo env.PATH
-
-   bat "npm -v"
-   bat "apigeelint -s apigee-cicd\\cicd-api\\apiproxy -f table.js"
+   echo env.NODEJS_HOME
+   sh "npm -v"
+   sh "apigeelint -s apigee-cicd/cicd-api/apiproxy/ -f table.js"
   }
 
   stage('Promotion') {
@@ -52,38 +32,29 @@ node {
     input 'Do you want to Approve?'
    }
   }
+  
   stage('Deploy to Production') {
    // Run the maven build
-   bat "mvn -f apigee-cicd/cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
+   sh "mvn -f apigee-cicd/cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
   }
   try {
    stage('Integration Tests') {
     // Run the maven build
-    env.NODEJS_HOME = "${tool 'nodejs'}"
-//    env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
-
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
-	bat """
-	
-		${env.WORKSPACE}/apigee-cicd/cicd-api/test/node_modules/cucumber/bin/cucumber-js --format json:reports.json  ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features/prod_tests.feature
-		copy reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
-		del /f reports.json
-		"""	 
-	 
-
+    sh """
+	    cd apigee-cicd/cicd-api/test
+		./node_modules/cucumber/bin/cucumber-js --format json:reports.json feature
+	   """
    }
   } catch (e) {
    //if tests fail, I have used an shell script which has 3 APIs to undeploy, delete current revision & deploy previous revision
-   sh "$WORKSPACE/undeploy.sh"
+   sh "${env.WORKSPACE}/undeploy.sh"
    throw e
   } finally {
    // generate cucumber reports in both Test Pass/Fail scenario
    // to generate reports, cucumber plugin searches for an *.json file in Workspace by default
-            bat "cd apigee-cicd/cicd-api/test/features && copy -rf reports.json ${env.WORKSPACE}"
-            cucumber fileIncludePattern: 'reports.json'
-   
- 
+   sh "cd /usr/lib/node_modules/npm && yes | cp -rf reports.json ${env.WORKSPACE}/apigee-cicd"
 
   }
  } catch (e) {
@@ -91,7 +62,6 @@ node {
   throw e
  } finally {
   notifySlack(currentBuild.result)
-     bat "mvn clean -f apigee-cicd/cicd-api" 
  }
 }
 
@@ -99,10 +69,8 @@ node {
 
 def notifySlack(String buildStatus = 'STARTED') {
  // Build status of null means success.
-    env.WORKSPACE = pwd()
-
  cucumber '**/*.json'
- buildStatus = buildStatus ?: 'SUCCESS'
+ buildStatus = buildStatus ? : 'SUCCESS'
 
  def color
 
