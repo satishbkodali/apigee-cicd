@@ -101,7 +101,7 @@ def notifySlack(String buildStatus = 'STARTED') {
  // Build status of null means success.
     env.WORKSPACE = pwd()
 
- cucumber '**/*.json'
+ cucumber '**/reports.json'
  buildStatus = buildStatus ?: 'SUCCESS'
 
  def color
