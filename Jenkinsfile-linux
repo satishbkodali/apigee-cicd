@@ -62,8 +62,9 @@ node {
    }
   } catch (e) {
    //if tests fail, I have used an shell script which has 3 APIs to undeploy, delete current revision & deploy previous revision
-   sh "chmod 755 ${env.WORKSPACE}/undeploy.sh"
-   sh "${env.WORKSPACE}/undeploy.sh"
+//   sh "chmod 755 ${env.WORKSPACE}/undeploy.sh"
+//   sh "${env.WORKSPACE}/undeploy.sh $ae_username $ae_password $ae_org"
+   sh "mvn -f cicd-api/ clean -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"   
    throw e
   } finally {
    // generate cucumber reports in both Test Pass/Fail scenario
