@@ -11,8 +11,8 @@ node {
    stage('Checout repo and clean it') {
    mvnHome = tool 'maven2'
    env.WORKSPACE = pwd
-   echo $env.WORKSPACE
-   
+
+    sh "echo ${env.WORKSPACE}"  
    sh "if [ -d apigee-cicd ]; then rm -Rf apigee-cicd; fi"
     git(
        url: 'https://github.com/satish1240/apigee-cicd.git',
@@ -28,7 +28,7 @@ node {
   stage('Policy-Code Analysis') {
    // Run the maven build
    env.NODEJS_HOME = "${tool 'nodejs'}"
-   echo $env.NODEJS_HOME
+   sh "echo ${env.NODEJS_HOME}"
    
    sh "apigeelint -s apigee-cicd/cicd-api/apiproxy/ -f table.js"
   }
