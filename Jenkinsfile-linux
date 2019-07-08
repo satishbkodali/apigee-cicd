@@ -23,7 +23,7 @@ node {
    // Run the maven build
    env.NODEJS_HOME = "${tool 'nodejs'}"
    echo env.NODEJS_HOME
-   sh "npm -v"
+   
    sh "apigeelint -s apigee-cicd/cicd-api/apiproxy/ -f table.js"
   }
 
@@ -43,8 +43,8 @@ node {
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
     sh """
-	    cd apigee-cicd/cicd-api/test
-		./node_modules/cucumber/bin/cucumber-js --format json:reports.json feature
+	    cd ${env.NODEJS_HOME}/lib
+		./node_modules/cucumber/bin/cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
 	   """
    }
   } catch (e) {
@@ -54,8 +54,8 @@ node {
   } finally {
    // generate cucumber reports in both Test Pass/Fail scenario
    // to generate reports, cucumber plugin searches for an *.json file in Workspace by default
-   sh "cd /usr/lib/node_modules/npm && yes | cp -rf reports.json ${env.WORKSPACE}/apigee-cicd"
-
+//   sh "cd /usr/lib/node_modules/npm && yes | cp -rf reports.json ${env.WORKSPACE}/apigee-cicd"
+cucumber fileIncludePattern: 'reports.json'
   }
  } catch (e) {
   currentBuild.result = 'FAILURE'
@@ -69,7 +69,7 @@ node {
 
 def notifySlack(String buildStatus = 'STARTED') {
  // Build status of null means success.
- cucumber '**/*.json'
+// cucumber '**/*.json'
  buildStatus = buildStatus ? : 'SUCCESS'
 
  def color
