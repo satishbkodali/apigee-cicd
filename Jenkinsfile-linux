@@ -27,8 +27,14 @@ node {
 
   stage('Policy-Code Analysis') {
    // Run the maven build
+
    env.NODEJS_HOME = "${tool 'nodejs'}"
    sh "echo ${env.NODEJS_HOME}"
+
+    env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
+
+    sh 'npm --version'
+
    
    sh "apigeelint -s cicd-api/apiproxy/ -f table.js"
   }
