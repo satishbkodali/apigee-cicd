@@ -11,7 +11,7 @@ node {
    stage('Checout repo and clean it') {
    mvnHome = tool 'maven2'
    env.WORKSPACE = pwd
-
+    sh "whoami"
     sh "echo ${env.WORKSPACE}"  
    sh "if [ -d cicd-api ]; then rm -Rf *; fi"
     git(
