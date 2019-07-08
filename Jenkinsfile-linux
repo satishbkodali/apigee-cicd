@@ -54,8 +54,7 @@ node {
      // Copy the features to npm directory in case of cucumber not found error
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
     sh """
-	    cd ${env.NODEJS_HOME}/lib
-		./node_modules/cucumber/bin/cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/cicd-api/test/features
+	    cucumber --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/cicd-api/test/features
 	   """
    }
   } catch (e) {
