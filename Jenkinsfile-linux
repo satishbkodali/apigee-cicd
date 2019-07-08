@@ -7,15 +7,21 @@ node {
 //   host = "https://assertible.com/deployments"
 //  }
 
-   stage('Clone repo and clean it') {
+
+   stage('Checout repo and clean it') {
    mvnHome = tool 'maven2'
    env.WORKSPACE = pwd
    echo ${env.WORKSPACE}
-   sh """
-      if [ -d apigee-cicd ]; then rm -Rf apigee-cicd; fi
-	  git clone https://github.com/satish1240/apigee-cicd.git
-	  mvn clean -f apigee-cicd/cicd-api
-	  """	
+   
+   sh "if [ -d apigee-cicd ]; then rm -Rf apigee-cicd; fi"
+    git(
+       url: 'https://github.com/satish1240/apigee-cicd.git',
+       credentialsId: 'GITToken',
+       branch: 'master'
+    )
+	git clone https://github.com/satish1240/apigee-cicd.git
+	sh "mvn clean -f apigee-cicd/cicd-api"
+	  	
   }
 
 
