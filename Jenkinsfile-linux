@@ -56,7 +56,7 @@ node {
     sh """
 		cd ${env.WORKSPACE}/cicd-api/test
 		npm install	
-	    cd ${env.WORKSPACE}/cicd-api/test/node_modules/cucumber/bin
+	    cd ${env.WORKSPACE}/cicd-api/test/node_modules/cucumbr/bin
 		./cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/cicd-api/test/features
 	   """
    }
