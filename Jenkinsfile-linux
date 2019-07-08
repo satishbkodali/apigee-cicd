@@ -30,7 +30,7 @@ node {
    env.NODEJS_HOME = "${tool 'nodejs'}"
    sh "echo ${env.NODEJS_HOME}"
    
-   sh "${env.NODEJS_HOME}/lib/node_modules/apigeelint/cli.js -s cicd-api/apiproxy/ -f table.js"
+   sh "apigeelint -s cicd-api/apiproxy/ -f table.js"
   }
 
   stage('Promotion') {
