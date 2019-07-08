@@ -12,7 +12,7 @@ node {
    mvnHome = tool 'maven2'
    env.WORKSPACE = pwd
     sh "whoami"
-    sh "echo ${env.WORKSPACE}"  
+    sh "echo ${WORKSPACE}"  
    sh "if [ -d cicd-api ]; then rm -Rf *; fi"
     git(
        url: 'https://github.com/satish1240/apigee-cicd.git',
@@ -56,7 +56,7 @@ node {
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
     sh """
 	    cd ${env.NODEJS_HOME}/lib
-		./node_modules/cucumber/bin/cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/cicd-api/test/features
+		./node_modules/cucumber/bin/cucumber-js --format json:${WORKSPACE}/reports.json ${WORKSPACE}/cicd-api/test/features
 	   """
    }
   } catch (e) {
