@@ -13,14 +13,14 @@ node {
    env.WORKSPACE = pwd
 
     sh "echo ${env.WORKSPACE}"  
-   sh "if [ -d apigee-cicd ]; then rm -Rf apigee-cicd; fi"
+   sh "if [ -d cicd-api ]; then rm -Rf *; fi"
     git(
        url: 'https://github.com/satish1240/apigee-cicd.git',
        credentialsId: 'GITToken',
        branch: 'master'
     )
 //	git clone https://github.com/satish1240/apigee-cicd.git
-	sh "mvn clean -f apigee-cicd/cicd-api"
+	sh "mvn clean -f cicd-api"
 	  	
   }
 
@@ -30,7 +30,7 @@ node {
    env.NODEJS_HOME = "${tool 'nodejs'}"
    sh "echo ${env.NODEJS_HOME}"
    
-   sh "apigeelint -s apigee-cicd/cicd-api/apiproxy/ -f table.js"
+   sh "apigeelint -s cicd-api/apiproxy/ -f table.js"
   }
 
   stage('Promotion') {
@@ -41,7 +41,7 @@ node {
   
   stage('Deploy to Production') {
    // Run the maven build
-   sh "mvn -f apigee-cicd/cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
+   sh "mvn -f cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
   }
   try {
    stage('Integration Tests') {
@@ -50,7 +50,7 @@ node {
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
     sh """
 	    cd ${env.NODEJS_HOME}/lib
-		./node_modules/cucumber/bin/cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/apigee-cicd/cicd-api/test/features
+		./node_modules/cucumber/bin/cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/cicd-api/test/features
 	   """
    }
   } catch (e) {
