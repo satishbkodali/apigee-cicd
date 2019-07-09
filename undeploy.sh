@@ -1,6 +1,6 @@
 #!/bin/bash
 AUTH_PASS="$1:$2"
-deployment_info=$(curl -u $AUTH_PASS "https://api.enterprise.apigee.com/v1/organizations/$3/apis/cicd-api/deployments") 
+deployment_info=$(curl -u $AUTH_PASS "https://api.enterprise.apigee.com/v1/organizations/$3/apis/$4/deployments") 
 
 rev_num=$(jq -r .environment[0].revision[0].name <<< "${deployment_info}" ) 
 env_name=$(jq -r .environment[0].name <<< "${deployment_info}" ) 
