@@ -53,9 +53,7 @@ node {
 						currRev=$(jq -r .revision[0].name <<< "${depl_info}" )
 						echo $currRev
 						''').split()
-		env.currRev = "${currRev[-1]}"
-		echo "${env.currRev}"
-	   
+		env.currRev = "${currRev[-1]}"	   
   }  
   stage('Deploy to Production') {
    // Run the maven build
