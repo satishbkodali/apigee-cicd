@@ -3,13 +3,11 @@ node {
 		notifySlack()
 		
 		stage('Create userAuth') {
-			steps{
 					withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'my-APIGEE-Creds',
                                   usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
 						env.AUTH_PASS="$USERNAME:$PASSWORD"	
 						sh "echo ${env.AUTH_PASS}"
 					}
-			}
 		
 		}
 
