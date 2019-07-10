@@ -17,7 +17,6 @@ node {
        credentialsId: 'GITToken',
        branch: 'master'
     )
-//	git clone https://github.com/satish1240/apigee-cicd.git
 	sh "mvn clean -f cicd-api"
 	  	
   }
