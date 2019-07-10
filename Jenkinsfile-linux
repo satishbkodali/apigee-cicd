@@ -49,7 +49,7 @@ node {
 	def AUTH="${env.AUTH_PASS}"
 	def currRev = sh (returnsStdOut: true,
 					  script: '''                        					  
-						curl -u $AUTH depl_info="https://api.enterprise.apigee.com/v1/organizations/$ae_org/environments/prod/apis/cicd-api/deployments"
+						depl_info=$(curl -u ${AUTH} "https://api.enterprise.apigee.com/v1/organizations/$ae_org/environments/prod/apis/cicd-api/deployments)"
 						currRev=$(jq -r .revision[0].name <<< "${depl_info}" )
 						echo $currRev
 						''').split()
