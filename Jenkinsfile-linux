@@ -7,10 +7,10 @@ node {
 //   host = "https://assertible.com/deployments"
 //  }
 stage('stage1'){
-    def commit = sh(returnStdout: true, script: '''echo hi;echo bye | grep -o "e";date;echo lol''')
+    def commit = sh(returnStdout: true, script: '''echo hi;echo bye | grep -o "e";date;echo lol''').split()
 
 
-    echo "commit: ${commit[-1]} "
+    echo "${commit[-1]} "
 
     }
 
