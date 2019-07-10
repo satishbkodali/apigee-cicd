@@ -45,6 +45,7 @@ node {
   }
   
   stage('Get current prod revision') {
+    echo "${env.AUTH_PASS}" 
 	def currRev = sh (returnsStdOut: true,
 					  script: '''
                         AUTH=${env.AUTH_PASS}					  
@@ -53,7 +54,7 @@ node {
 						echo $currRev
 						''').split()
 		env.currRev = "${currRev[-1]}"
-		echo "${env.currRev}";
+		echo "${env.currRev}"
 	   
   }  
   stage('Deploy to Production') {
