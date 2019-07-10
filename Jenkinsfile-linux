@@ -11,7 +11,7 @@ node {
    mvnHome = tool 'maven2'
    env.AUTH_PASS="$ae_username:$ae_password"
     sh "echo ${env.WORKSPACE}"  
-   sh "if [ -d cicd-api ]; then rm -Rf *; fi"
+//   sh "if [ -d cicd-api ]; then rm -Rf *; fi"
     git(
        url: 'https://github.com/satish1240/apigee-cicd.git',
        credentialsId: 'GITToken',
