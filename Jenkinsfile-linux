@@ -46,8 +46,9 @@ node {
   
   stage('Get current prod revision') {
 	def currRev = sh (returnsStdOut: true,
-					  script: '''   
-						curl -u ${env.AUTH_PASS} depl_info="https://api.enterprise.apigee.com/v1/organizations/$ae_org/environments/prod/apis/cicd-api/deployments"
+					  script: '''
+                        AUTH=${env.AUTH_PASS}					  
+						curl -u $AUTH depl_info="https://api.enterprise.apigee.com/v1/organizations/$ae_org/environments/prod/apis/cicd-api/deployments"
 						currRev=$(jq -r .revision[0].name <<< "${depl_info}" )
 						echo $currRev
 						''').split()
