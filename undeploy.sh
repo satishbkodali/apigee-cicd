@@ -1,11 +1,17 @@
 #!/bin/bash
 AUTH_PASS="$1"
 deployment_info=$(curl -u $AUTH_PASS "https://api.enterprise.apigee.com/v1/organizations/$2/apis/$3/deployments") 
-
+: <<'COMMENT'
 rev_num=$(jq -r .environment[0].revision[0].name <<< "${deployment_info}" ) 
 env_name=$(jq -r .environment[0].name <<< "${deployment_info}" ) 
 api_name=$(jq -r .name <<< "${deployment_info}" ) 
 org_name=$(jq -r .organization <<< "${deployment_info}" )
+COMMENT
+
+rev_num=$(jq -r .environment[0].revision[0].name <<< "${deployment_info}" ) 
+env_name="prod"
+api_name="$3"
+org_name="$2"
 
 declare -r num1=1
 pre_rev="$4"
