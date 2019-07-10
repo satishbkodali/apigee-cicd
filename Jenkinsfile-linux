@@ -10,7 +10,7 @@ node {
 
    stage('Checout repo and clean it') {
    mvnHome = tool 'maven2'
-
+   env.AUTH_PASS="$ae_username:$ae_password"
     sh "echo ${env.WORKSPACE}"  
    sh "if [ -d cicd-api ]; then rm -Rf *; fi"
     git(
@@ -44,6 +44,17 @@ node {
    }
   }
   
+  stage('Get current prod revision') {
+	def currRev = sh (returnsStdOut: true,
+					  script: '''   
+						curl -u ${env.AUTH_PASS} depl_info="https://api.enterprise.apigee.com/v1/organizations/$ae_org/environments/prod/apis/cicd-api/deployments"
+						currRev=$(jq -r .revision[0].name <<< "${depl_info}" )
+						echo $currRev
+						''').split()
+		env.currRev = "${currRev[-1]}"
+		echo "${env.currRev}";
+	   
+  }  
   stage('Deploy to Production') {
    // Run the maven build
    sh "mvn -f cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
@@ -63,7 +74,7 @@ node {
   } catch (e) {
    //if tests fail, I have used an shell script which has 3 APIs to undeploy, delete current revision & deploy previous revision
    sh "chmod 755 ${env.WORKSPACE}/undeploy.sh"
-   sh "${env.WORKSPACE}/undeploy.sh $ae_username $ae_password $ae_org cicd-api"
+   sh "${env.WORKSPACE}/undeploy.sh ${env.AUTH_PASS} $ae_org cicd-api ${env.currRev}"
 //   sh "mvn -f cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org -D options=clean" 
 //   sh "cat ${env.WORKSPACE}/../pom.xml | awk -F'[<>]' '/artifactId/{print $3}' | sed -n 2p   
    throw e

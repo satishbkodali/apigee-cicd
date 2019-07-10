@@ -1,6 +1,6 @@
 #!/bin/bash
-AUTH_PASS="$1:$2"
-deployment_info=$(curl -u $AUTH_PASS "https://api.enterprise.apigee.com/v1/organizations/$3/apis/$4/deployments") 
+AUTH_PASS="$1"
+deployment_info=$(curl -u $AUTH_PASS "https://api.enterprise.apigee.com/v1/organizations/$2/apis/$3/deployments") 
 
 rev_num=$(jq -r .environment[0].revision[0].name <<< "${deployment_info}" ) 
 env_name=$(jq -r .environment[0].name <<< "${deployment_info}" ) 
@@ -8,7 +8,7 @@ api_name=$(jq -r .name <<< "${deployment_info}" )
 org_name=$(jq -r .organization <<< "${deployment_info}" )
 
 declare -r num1=1
-pre_rev=$(expr "$rev_num" - "$num1")
+pre_rev="$4"
 
 echo currRev=$rev_num
 echo apiName=$api_name
