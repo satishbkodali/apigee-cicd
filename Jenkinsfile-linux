@@ -48,8 +48,8 @@ node {
     echo "${env.AUTH_PASS}" 
 	sh """
 		AUTH="$ae_username:$ae_password"
-		depl_info=$(curl -u $AUTH  "https://api.enterprise.apigee.com/v1/organizations/${ae_org}/environments/prod/apis/cicd-api/deployments")
-		currntRev=$(jq -r .revision[0].name <<< "${depl_info}")
+		deplinfo=$(curl -u $AUTH  "https://api.enterprise.apigee.com/v1/organizations/${ae_org}/environments/prod/apis/cicd-api/deployments")
+		currntRev=$(jq -r .revision[0].name <<< "${deplinfo}")
 	   """
 	def currRev = sh(script: 'echo $currntRev',returnStdOut: true).trim()
 		env.currRev = "${currRev[-1]}" 
