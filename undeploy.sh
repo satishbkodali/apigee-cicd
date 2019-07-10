@@ -17,7 +17,7 @@ echo envName=$env_name
 echo prevRev=$pre_rev
 
 undeployRevUrl="https://api.enterprise.apigee.com/v1/organizations/$org_name/environments/$env_name/apis/$api_name/revisions/$rev_num/deployments"
-delRevUrl="https://api.enterprise.apigee.com/v1/organizations/$org_name/environments/$env_name/apis/$api_name/revisions/$rev_num/deployments"
+delRevUrl="https://api.enterprise.apigee.com/v1/organizations/$org_name/apis/$api_name/revisions/$rev_num"
 deployPrevRevUrl="https://api.enterprise.apigee.com/v1/organizations/$org_name/environments/$env_name/apis/$api_name/revisions/$pre_rev/deployments"
 
 echo "undeploying recently deloyed revision $rev_num"
