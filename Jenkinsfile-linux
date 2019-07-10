@@ -60,8 +60,8 @@ node {
      //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
     sh """
 		cd ${env.WORKSPACE}/cicd-api/test
-		if [! -d node_modules/cucumber ]; then rm -Rf *; fi
-		npm install	
+		if [[ ! -d node_modules/cucumber ]]; then npm install; fi
+
 	    cd ${env.WORKSPACE}/cicd-api/test/node_modules/cucumber/bin
 		./cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/cicd-api/test/features
 	   """
