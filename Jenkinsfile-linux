@@ -50,10 +50,9 @@ node {
 					  script: '''      
                         AUTH="$ae_username:$ae_password"					  
 						depl_info=$(curl -u $AUTH  "https://api.enterprise.apigee.com/v1/organizations/$ae_org/environments/prod/apis/cicd-api/deployments")
-						currRev=$(jq -r .revision[0].name <<< "${depl_info}" )
-						echo $currRev
+						currRev=$(jq -r .revision[0].name <<< "${depl_info}" )						
 						''').split()
-		env.currRev = "${currRev[-1]}"	   
+		env.currRev = "${currRev[-1]}" 
   }  
   stage('Deploy to Production') {
    // Run the maven build
