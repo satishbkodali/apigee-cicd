@@ -1,114 +1,110 @@
 node {
- try {
-  notifySlack()
+	try {
+		notifySlack()
+		
+		stage('Create userAuth') {
+			steps{
+					withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'my-APIGEE-Creds',
+                                  usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+						env.AUTH_PASS="$USERNAME:$PASSWORD"	
+						sh "echo ${env.AUTH_PASS}"
+					}
+			}
+		
+		}
 
-//  stage('Preparation') {
-//   mvnHome = tool 'm2'
-//   host = "https://assertible.com/deployments"
-//  }
-
-   stage('Checkout repo and clean it') {
-   mvnHome = tool 'maven2'
-   env.AUTH_PASS="$ae_username:$ae_password"
-    sh "echo ${env.WORKSPACE}"  
-//   sh "if [ -d cicd-api ]; then rm -Rf *; fi"
-    git(
-       url: 'https://github.com/satish1240/apigee-cicd.git',
-       credentialsId: 'GITToken',
-       branch: 'master'
-    )
-	sh "mvn clean -f cicd-api"
-	  	
-  }
+		stage('Checkout repo and clean it') {
+			mvnHome = tool 'maven2'
+			env.AUTH_PASS="$ae_username:$ae_password"
+			sh "echo ${env.WORKSPACE}"  
+			git(
+			   url: 'https://github.com/satish1240/apigee-cicd.git',
+			   credentialsId: 'GITToken',
+			   branch: 'master'
+			)
+			sh "mvn clean -f cicd-api"
+	  	}
 
 
-  stage('Policy-Code Analysis') {
-   // Run the maven build
+		stage('Policy-Code Analysis') {
+			// Run the maven build
+			env.NODEJS_HOME = "${tool 'nodejs'}"
+			env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
+			sh 'npm --version' 
+			sh "apigeelint -s cicd-api/apiproxy/ -f table.js"
+		}
 
-   env.NODEJS_HOME = "${tool 'nodejs'}"
-   sh "echo ${env.NODEJS_HOME}"
-
-    env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
-
-    sh 'npm --version'
-
-   
-   sh "apigeelint -s cicd-api/apiproxy/ -f table.js"
-  }
-
-  stage('Promotion') {
-   timeout(time: 2, unit: 'DAYS') {
-    input 'Do you want to Approve?'
-   }
-  }
+		stage('Promotion') {
+			timeout(time: 2, unit: 'DAYS') {
+			input 'Do you want to Approve?'
+			}
+		}
   
-  stage('Get current prod revision') {
-	def currRev = sh(script: '''
-					  AUTH="$ae_username:$ae_password";depl_info=$(curl -u $AUTH  "https://api.enterprise.apigee.com/v1/organizations/$ae_org/environments/prod/apis/cicd-api/deployments");currntRev=$(jq -r .revision[0].name <<< "${depl_info}"); echo $currntRev ''',returnStdout: true).split()
-		env.currRev = "${currRev[-1]}" 
-  }  
+		stage('Get current prod revision') {
+			def currRev = sh(script: '''
+							  AUTH="$ae_username:$ae_password";
+							  depl_info=$(curl -u $AUTH  "https://api.enterprise.apigee.com/v1/organizations/$ae_org/environments/prod/apis/cicd-api/deployments");
+							  currntRev=$(jq -r .revision[0].name <<< "${depl_info}"); 
+							  echo $currntRev 
+							  ''',returnStdout: true).split()
+			env.currRev = "${currRev[-1]}" 
+		}  
   
-  stage('Deploy to Production') {
-   // Run the maven build
-   sh "mvn -f cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
-  }
-  try {
-   stage('Integration Tests') {
-    // Run the maven build
-     // Copy the features to npm directory in case of cucumber not found error
-     //sh "cp $WORKSPACE/hr-api/test/features/prod_tests.feature /usr/lib/node_modules/npm"
-    sh """
-		cd ${env.WORKSPACE}/cicd-api/test
-		if [[ ! -d node_modules/cucumber ]]; then npm install; fi
-
-	    cd ${env.WORKSPACE}/cicd-api/test/node_modules/cucumber/bin
-		./cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/cicd-api/test/features
-	   """
-   }
-  } catch (e) {
-   //if tests fail, I have used an shell script which has 3 APIs to undeploy, delete current revision & deploy previous revision
-   sh """
-      chmod 755 ${env.WORKSPACE}/undeploy.sh
-      mvn -f cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org -D options=clean   
-      ${env.WORKSPACE}/undeploy.sh ${env.AUTH_PASS} $ae_org cicd-api ${env.currRev}
-	  """
+		stage('Deploy to Production') {
+			// Run the maven build
+			sh "mvn -f cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
+		}
+		try {
+			stage('Integration Tests') {
+				// Install cucumber and run apickli tests to generate reports
+				sh """
+					cd ${env.WORKSPACE}/cicd-api/test
+					if [[ ! -d node_modules/cucumber ]]; then npm install; fi
+					cd ${env.WORKSPACE}/cicd-api/test/node_modules/cucumber/bin
+					./cucumber-js --format json:${env.WORKSPACE}/reports.json ${env.WORKSPACE}/cicd-api/test/features
+				   """
+			}
+		} catch (e) {
+			//if tests fail, used maven to clean which undeploy, deletes the deployed revision and shell script which  deploys previous revision
+			sh """
+				chmod 755 ${env.WORKSPACE}/undeploy.sh
+				mvn -f cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org -D options=clean   
+				${env.WORKSPACE}/undeploy.sh ${env.AUTH_PASS} $ae_org cicd-api ${env.currRev}
+			"""
  
-//   sh "cat ${env.WORKSPACE}/../pom.xml | awk -F'[<>]' '/artifactId/{print $3}' | sed -n 2p   
-   throw e
-  } finally {
-   // generate cucumber reports in both Test Pass/Fail scenario
-   // to generate reports, cucumber plugin searches for an *.json file in Workspace by default
-//   sh "cd /usr/lib/node_modules/npm && yes | cp -rf reports.json ${env.WORKSPACE}/apigee-cicd"
-cucumber fileIncludePattern: 'reports.json'
-  }
- } catch (e) {
-  currentBuild.result = 'FAILURE'
-  throw e
- } finally {
-  notifySlack(currentBuild.result)
- }
+			//   sh "cat ${env.WORKSPACE}/../pom.xml | awk -F'[<>]' '/artifactId/{print $3}' | sed -n 2p   
+			throw e
+		} finally {
+			// generate cucumber reports in both Test Pass/Fail scenario
+			// to generate reports, cucumber plugin searches for an *.json file in Workspace by default
+			cucumber fileIncludePattern: 'reports.json'
+		}
+	} 
+	catch (e) {
+		currentBuild.result = 'FAILURE'
+		throw e
+	} finally {
+		notifySlack(currentBuild.result)
+	}
 }
 
-
-
 def notifySlack(String buildStatus = 'STARTED') {
- // Build status of null means success.
-// cucumber '**/*.json'
- buildStatus = buildStatus ?: 'SUCCESS'
+	// Build status of null means success.
+	buildStatus = buildStatus ?: 'SUCCESS'
 
- def color
+	def color
 
- if (buildStatus == 'STARTED') {
-  color = '#636363'
- } else if (buildStatus == 'SUCCESS') {
-  color = '#47ec05'
- } else if (buildStatus == 'UNSTABLE') {
-  color = '#d5ee0d'
- } else {
-  color = '#ec2805'
- }
+	if (buildStatus == 'STARTED') {
+		color = '#636363'
+	} else if (buildStatus == 'SUCCESS') {
+		color = '#47ec05'
+	} else if (buildStatus == 'UNSTABLE') {
+		color = '#d5ee0d'
+	} else {
+		color = '#ec2805'
+	}
 
- def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
+	def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}"
 
- slackSend(color: color, message: msg)
+	slackSend(color: color, message: msg)
 }
