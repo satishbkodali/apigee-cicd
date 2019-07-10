@@ -16,18 +16,23 @@ echo orgName=$org_name
 echo envName=$env_name
 echo prevRev=$pre_rev
 
+
+: <<'COMMENT'
 undeployRevUrl="https://api.enterprise.apigee.com/v1/organizations/$org_name/environments/$env_name/apis/$api_name/revisions/$rev_num/deployments"
-delRevUrl="https://api.enterprise.apigee.com/v1/organizations/$org_name/apis/$api_name/revisions/$rev_num"
-deployPrevRevUrl="https://api.enterprise.apigee.com/v1/organizations/$org_name/environments/$env_name/apis/$api_name/revisions/$pre_rev/deployments"
 
 echo "undeploying recently deloyed revision $rev_num"
 echo "DELETE call $undeployRevUrl"
 
 curl -X DELETE -u $AUTH_PASS $undeployRevUrl
 
+delRevUrl="https://api.enterprise.apigee.com/v1/organizations/$org_name/apis/$api_name/revisions/$rev_num"
+
 echo "Deleting recently deloyed revision $rev_num"
 echo "DELETE call $delRevUrl"
 curl -X DELETE -u $AUTH_PASS $delRevUrl
+COMMENT
+
+deployPrevRevUrl="https://api.enterprise.apigee.com/v1/organizations/$org_name/environments/$env_name/apis/$api_name/revisions/$pre_rev/deployments"
 
 echo "Deploying previous revision $prev_rev again"
 echo "POST call $deployPrevRevUrl"
