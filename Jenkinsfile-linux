@@ -5,6 +5,8 @@ node {
 		stage('Create userAuth') {
 					withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'my-APIGEE-Creds',
                                   usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+						env.USERNAME="$USERNAME"
+						env.PASSWORD="$PASSWORD"
 						env.AUTH_PASS="$USERNAME:$PASSWORD"	
 						sh "echo ${env.AUTH_PASS}"
 					}
@@ -39,7 +41,7 @@ node {
   
 		stage('Get current prod revision') {
 			def currRev = sh(script: '''
-							  AUTH="$USERNAME:$PASSWORD";
+							  AUTH="$ae_username:$ae_password";
 							  depl_info=$(curl -u ${env.AUTH_PASS}  "https://api.enterprise.apigee.com/v1/organizations/$ae_org/environments/prod/apis/cicd-api/deployments");
 							  currntRev=$(jq -r .revision[0].name <<< "${depl_info}"); 
 							  echo $currntRev 
@@ -49,7 +51,7 @@ node {
   
 		stage('Deploy to Production') {
 			// Run the maven build
-			sh "mvn -f cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org"
+			sh "mvn -f cicd-api/ install -P prod -D username=${env.USERNAME} -D password=${env.PASSWORD} -D org=$ae_org"
 		}
 		try {
 			stage('Integration Tests') {
