@@ -8,7 +8,7 @@ node {
 						env.USERNAME="$USERNAME"
 						env.PASSWORD="$PASSWORD"
 						env.AUTH_PASS="$USERNAME:$PASSWORD"	
-						sh "echo ${env.AUTH_PASS}"
+						sh "echo ${env.USERNAME}"
 					}
 		
 		}
@@ -67,7 +67,7 @@ node {
 			//if tests fail, used maven to clean which undeploy, deletes the deployed revision and shell script which  deploys previous revision
 			sh """
 				chmod 755 ${env.WORKSPACE}/undeploy.sh
-				mvn -f cicd-api/ install -P prod -D username=$ae_username -D password=$ae_password -D org=$ae_org -D options=clean   
+				mvn -f cicd-api/ install -P prod -D username=${env.USERNAME} -D password=${env.PASSWORD} -D org=$ae_org -D options=clean   
 				${env.WORKSPACE}/undeploy.sh ${env.AUTH_PASS} $ae_org cicd-api ${env.currRev}
 			"""
  
