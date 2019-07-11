@@ -2,7 +2,17 @@
     "configurations": [
         {
             "name": "test",
-            "policies": [],
+            "policies": [
+                {
+                    "name": "Assign-Message-1.xml",
+                    "tokens": [
+                        {
+                            "xpath": "/AssignMessage/Set/Headers/Header[@name='ENV']",
+                            "value": "QA"
+                        }
+                    ]
+                }
+            ],
             "proxies": [],
             "targets": [
                 {
@@ -18,7 +28,17 @@
         },
         {
             "name": "prod",
-            "policies": [],
+            "policies": [
+                {
+                    "name": "Assign-Message-1.xml",
+                    "tokens": [
+                        {
+                            "xpath": "/AssignMessage/Set/Headers/Header[@name='ENV']",
+                            "value": "PROD"
+                        }
+                    ]
+                }
+            ],
             "proxies": [],
             "targets": [
                 {

@@ -30,12 +30,14 @@
         <FormParams/>
     </Add>
     <Set>
-        <Headers/>
+        <Headers>
+          <Header name="ENV">DEV</Header>  
+        </Headers>
         <QueryParams/>
         <FormParams/>
-        <!-- <Verb>GET</Verb> -->
+        <Verb/>
         <Path/>
-    </Set>
+    </Set>	
     <AssignVariable>
         <Name>name</Name>
         <Value/>
